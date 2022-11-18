@@ -1,23 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 
 function App() {
+
+  const handleCallbackResponse = (response) => {
+    console.log(response.credential);
+    var userObject = jwtDecode(response.credential);
+    console.log(userObject);
+  }
+
+  useEffect(() => {
+   /*global google*/
+   google.accounts.id.initialize({
+    client_id: "904876233480-179bf3pf9hflg4v59pl0plu782rkcngd.apps.googleusercontent.com",
+    callback: handleCallbackResponse
+   });
+
+   google.accounts.id.renderButton(
+    document.getElementById("buttonDiv"),
+    { theme: "outline", size: "large" }
+   );
+   google.accounts.id.prompt();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="buttonDiv"></div>
     </div>
   );
 }
